@@ -87,7 +87,21 @@ function initWatchPage() {
     } else {
 
       // Load video source
-      videoPlayer.src = selectedVideo.video;
+      const youtubePlayer = document.getElementById("youtubePlayer");
+
+if (selectedVideo.video.includes("youtube.com") || selectedVideo.video.includes("youtu.be")) {
+  const videoUrl = new URL(selectedVideo.video);
+  const youtubeId = videoUrl.searchParams.get("v");
+
+  videoPlayer.style.display = "none";
+  youtubePlayer.style.display = "block";
+  youtubePlayer.src = `https://www.youtube.com/embed/${youtubeId}`;
+} else {
+  youtubePlayer.style.display = "none";
+  videoPlayer.style.display = "block";
+  videoPlayer.src = selectedVideo.video;
+  videoPlayer.load();
+}
 
       // Set title + description
       videoTitle.textContent = selectedVideo.title;
