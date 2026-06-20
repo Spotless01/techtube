@@ -1,0 +1,13 @@
+node_modules/
+backend/node_modules/
+
+.env
+
+uploads/
+
+backend/uploads/
+
+db.json
+backend/db.json
+
+videos/

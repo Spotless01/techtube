@@ -1,0 +1,107 @@
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, sans-serif;
+}
+
+body {
+  background: #0f0f0f;
+  color: white;
+  min-height: 100vh;
+  padding: 30px;
+}
+
+.admin-container {
+  max-width: 900px;
+  margin: auto;
+  background: #181818;
+  padding: 30px;
+  border-radius: 16px;
+}
+
+h1 {
+  margin-bottom: 25px;
+  color: #00c3ff;
+}
+
+h2 {
+  margin: 25px 0 15px;
+}
+
+form {
+  display: grid;
+  gap: 15px;
+}
+
+input,
+textarea {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #252525;
+  color: white;
+  outline: none;
+}
+
+textarea {
+  min-height: 120px;
+  resize: vertical;
+}
+
+button {
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: linear-gradient(90deg, #00c3ff, #8a2be2);
+  color: white;
+  font-weight: bold;
+  cursor: pointer;
+}
+
+button:hover {
+  opacity: 0.9;
+}
+
+hr {
+  border: none;
+  border-top: 1px solid #333;
+  margin: 30px 0;
+}
+
+.video-item {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+  background: #222;
+  padding: 12px;
+  border-radius: 12px;
+  margin-bottom: 15px;
+}
+
+.video-item img {
+  width: 120px;
+  height: 70px;
+  object-fit: cover;
+  border-radius: 8px;
+}
+
+.video-info {
+  flex: 1;
+}
+
+.video-info h3 {
+  font-size: 16px;
+  margin-bottom: 5px;
+}
+
+.video-info p {
+  font-size: 13px;
+  color: #aaa;
+}
+
+.delete-btn {
+  background: #e50914;
+  padding: 8px 12px;
+}

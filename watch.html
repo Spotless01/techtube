@@ -1,0 +1,220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <!-- =====================================================
+       1️⃣ META & STYLES
+  ====================================================== -->
+  <meta charset="UTF-8">
+  <title>TechTube | Watch</title>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Global Styles -->
+  <link rel="stylesheet" href="style.css">
+
+  <!-- Watch Page Styles -->
+  <link rel="stylesheet" href="watch.css">
+</head>
+
+<body>
+
+  <!-- =====================================================
+       2️⃣ HEADER / TOP NAVIGATION
+  ====================================================== -->
+  <header class="header">
+
+    <!-- Hamburger Menu -->
+    <button id="menuToggle" class="hamburger">☰</button>
+
+    <!-- Logo -->
+    <div class="logo">
+      <span class="logo-tech">Tech</span>
+      <span class="logo-tube">Tube</span>
+    </div>
+
+    <!-- Search -->
+    <div class="search-bar">
+      <input type="text" id="searchInput" placeholder="Search tech videos...">
+      <button id="searchBtn">🔍</button>
+    </div>
+
+    <!-- Right Side Actions -->
+    <div class="header-actions">
+
+      <!-- Partner Button -->
+      <button class="brand-btn">Partner With Us</button>
+
+      <!-- Profile Avatar -->
+      <div class="profile-container">
+        <div class="profile" id="profileToggle">
+          <img src="images/profile.jpg" alt="Profile">
+        </div>
+      </div>
+
+    </div>
+  </header>
+
+
+
+  <!-- =====================================================
+       3️⃣ SIDEBAR NAVIGATION
+  ====================================================== -->
+
+  <aside class="sidebar" id="sidebar">
+    <ul class="sidebar-menu">
+      <li class="watch-category" data-category="All">All</li>
+      <li class="watch-category" data-category="AI">AI</li>
+      <li class="watch-category" data-category="Cybersecurity">Cybersecurity</li>
+      <li class="watch-category" data-category="Programming">Programming</li>
+    </ul>
+  </aside>
+
+  <!-- Sidebar Dark Overlay -->
+  <div class="overlay" id="sidebarOverlay"></div>
+
+
+
+  <!-- =====================================================
+       4️⃣ MAIN WATCH PAGE WRAPPER
+  ====================================================== -->
+  <main class="watch-page layout">
+
+    <!-- =====================================================
+         4A️⃣ MAIN VIDEO SECTION
+    ====================================================== -->
+    <section class="main-video-section">
+
+      <!-- Video Player -->
+      <div class="video-player">
+        <video id="videoPlayer" controls></video>
+      </div>
+
+
+      <!-- ===============================================
+           NETFLIX STYLE "UP NEXT" OVERLAY
+      ================================================ -->
+      <div class="up-next-overlay" id="upNextOverlay">
+
+        <div class="up-next-box">
+
+          <p class="up-next-label">Up Next</p>
+
+          <div class="up-next-content">
+
+            <!-- Thumbnail Preview -->
+            <img id="nextThumbnail" class="up-next-thumb" src="" alt="Next video thumbnail">
+
+            <!-- Video Info -->
+            <div class="up-next-details">
+
+              <h3 id="nextVideoTitle"></h3>
+
+              <div class="countdown">
+                Playing in <span id="countdownNumber">5</span>...
+              </div>
+
+              <!-- Buttons -->
+              <div class="up-next-buttons">
+                <button id="cancelNext">Cancel</button>
+                <button id="playNow">Play Now</button>
+              </div>
+
+            </div>
+          </div>
+        </div>
+      </div>
+
+
+      <!-- ===============================================
+           VIDEO TITLE, STATS & DESCRIPTION
+      ================================================ -->
+      <div class="video-info">
+
+        <h1 id="videoTitle"></h1>
+
+        <p class="video-stats" id="videoStats"></p>
+
+        <div class="video-description">
+          <p id="videoDescription"></p>
+        </div>
+
+      </div>
+
+    </section>
+
+
+
+    <!-- =====================================================
+        RECOMMENDED VIDEOS (VERTICAL - YOUTUBE STYLE)
+    ===================================================== -->
+    <aside class="recommended-section">
+
+      <h3>Up Next</h3>
+
+      <div id="recommendedSection" class="recommended-list">
+        <!-- Videos will render here -->
+      </div>
+
+    </aside>
+
+  </main>
+
+
+
+
+  <!-- =====================================================
+       5️⃣ PROFILE PANEL SYSTEM
+  ====================================================== -->
+
+  <!-- Dark Overlay -->
+  <div class="profile-overlay" id="profileOverlay"></div>
+
+  <!-- Slide-in Panel -->
+  <div class="profile-panel" id="profilePanel">
+
+    <h3>Upload Your Videos on TechTube</h3>
+
+    <p>
+      TechTube is a platform for tech creators. If you create content related to
+      AI, Programming, Cybersecurity, Web Development, or Startups,
+      you can partner with us and get featured.
+    </p>
+
+    <!-- Steps -->
+    <div class="upload-steps">
+      <h4>How It Works:</h4>
+      <ol>
+        <li>Submit your proposal using the form below.</li>
+        <li>We review your content.</li>
+        <li>If approved, your videos will be uploaded on TechTube.</li>
+      </ol>
+    </div>
+
+    <!-- Proposal Form -->
+    <form 
+      action="https://formsubmit.co/miezadelivery@gmail.com"
+      method="POST"
+      class="proposal-form"
+    >
+      <input type="hidden" name="_subject" value="New TechTube Partnership Proposal">
+      <input type="hidden" name="_captcha" value="false">
+
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="channel" placeholder="Channel/Brand Name" required>
+      <input type="text" name="link" placeholder="Link to Your Videos" required>
+      <textarea name="message" placeholder="Why should we feature your content?" required></textarea>
+
+      <button type="submit">Submit Proposal</button>
+    </form>
+
+  </div>
+
+
+
+  <!-- =====================================================
+       6️⃣ SCRIPTS
+  ====================================================== -->
+  <script src="watch.js" defer></script>
+
+</body>
+</html>

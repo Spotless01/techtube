@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<!-- =======================================================
+     HEAD SECTION (META + TITLE + STYLES)
+======================================================= -->
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>TechTube</title>
+
+  <!-- Main Styles -->
+  <link rel="stylesheet" href="style.css">
+</head>
+
+
+<!-- =======================================================
+     BODY START
+======================================================= -->
+<body>
+
+
+  <!-- =======================================================
+       HEADER (TOP NAVIGATION BAR)
+  ======================================================= -->
+  <header class="header">
+
+    <!-- Mobile Menu Toggle -->
+    <button class="menu-toggle" id="menuToggle" aria-label="Open Menu">☰</button>
+
+    <!-- Logo -->
+    <div class="logo">
+      <span class="logo-tech">Tech</span>
+      <span class="logo-tube">Tube</span>
+    </div>
+
+    <!-- ================= SEARCH ================= -->
+    <div class="search-bar">
+      <div class="search-wrapper">
+
+        <input 
+          type="text" 
+          id="searchInput" 
+          placeholder="Search tech videos..."
+          autocomplete="off"
+        >
+
+        <button id="searchBtn">🔍</button>
+
+        <!-- Suggestions Dropdown -->
+        <div class="suggestions-box" id="suggestionsBox"></div>
+
+      </div>
+    </div>
+
+    <!-- ================= RIGHT ACTIONS ================= -->
+    <div class="header-actions">
+
+      <!-- Partner CTA -->
+      <button class="brand-btn">Partner With Us</button>
+
+      <!-- Profile -->
+      <div class="profile-container">
+        <div class="profile" id="profileToggle">
+          <img src="images/profile.jpg" alt="User profile">
+        </div>
+      </div>
+
+    </div>
+  </header>
+  <!-- END HEADER -->
+
+
+  <!-- =======================================================
+       SIDEBAR (CATEGORY FILTER)
+  ======================================================= -->
+  <aside class="sidebar">
+
+    <ul>
+      <li class="category active" data-category="All">All</li>
+      <li class="category" data-category="AI">AI</li>
+      <li class="category" data-category="Cybersecurity">Cybersecurity</li>
+      <li class="category" data-category="Programming">Programming</li>
+    </ul>
+
+  </aside>
+  <!-- END SIDEBAR -->
+
+
+  <!-- =======================================================
+       MAIN CONTENT
+  ======================================================= -->
+  <main class="main-content">
+
+
+    <!-- ===================================================
+         HERO (FEATURED CONTENT)
+    =================================================== -->
+    <section class="hero">
+
+      <div class="hero-slides" id="heroSlides"></div>
+      <div class="hero-overlay"></div>
+
+      <div class="hero-content">
+        <h1 id="heroTitle"></h1>
+        <p id="heroDescription"></p>
+
+        <div class="hero-buttons">
+          <button class="play-btn" id="heroWatch">▶ Watch Now</button>
+          <button class="info-btn" id="heroInfo">More Info</button>
+        </div>
+      </div>
+
+    </section>
+    <!-- END HERO -->
+
+
+    <!-- ===================================================
+         TRENDING SECTION (HORIZONTAL SCROLL)
+    =================================================== -->
+    <section class="trending-section">
+
+      <div class="section-header">
+        <h2>🔥 Trending Now</h2>
+      </div>
+
+      <div class="row-scroll" id="trendingRow"></div>
+
+    </section>
+
+
+    <!-- ===================================================
+         RECOMMENDED (VERTICAL FEED)
+    =================================================== -->
+    <section class="all-videos-section">
+
+      <div class="section-header">
+        <h2>Recommended For You</h2>
+      </div>
+
+      <!-- Dynamic Grid -->
+      <div class="video-grid" id="videoGrid"></div>
+
+      <!-- Empty State (when no results) -->
+      <div class="empty-state" id="emptyState" style="display:none;">
+        <h3>No videos found 😕</h3>
+        <p>Try searching for "AI", "Programming", or "Cybersecurity"</p>
+      </div>
+
+    </section>
+
+
+    <!-- ===================================================
+         LOADING SKELETON (OPTIONAL)
+    =================================================== -->
+    <section class="loading-section" id="loadingSection" style="display:none;">
+      <div class="skeleton-grid">
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+        <div class="skeleton-card"></div>
+      </div>
+    </section>
+
+
+  </main>
+  <!-- END MAIN -->
+
+
+  <!-- =======================================================
+       PROFILE PANEL SYSTEM
+  ======================================================= -->
+
+  <!-- Overlay -->
+  <div class="profile-overlay" id="profileOverlay"></div>
+
+  <!-- Slide Panel -->
+  <div class="profile-panel" id="profilePanel">
+
+    <h3>Upload Your Videos on TechTube</h3>
+
+    <p>
+      TechTube is a platform for tech creators. If you create content related to
+      AI, Programming, Cybersecurity, Web Development, or Startups,
+      you can partner with us and get featured.
+    </p>
+
+    <!-- Steps -->
+    <div class="upload-steps">
+      <h4>How It Works:</h4>
+      <ol>
+        <li>Submit your proposal</li>
+        <li>We review your content</li>
+        <li>Get featured on TechTube</li>
+      </ol>
+    </div>
+
+    <!-- Form -->
+    <form 
+      action="https://formsubmit.co/miezadelivery@gmail.com" 
+      method="POST"
+      class="proposal-form"
+    >
+
+      <input type="hidden" name="_subject" value="New TechTube Partnership Proposal">
+      <input type="hidden" name="_captcha" value="false">
+
+      <input type="text" name="name" placeholder="Your Name" required>
+      <input type="email" name="email" placeholder="Your Email" required>
+      <input type="text" name="channel" placeholder="Channel/Brand Name" required>
+      <input type="text" name="link" placeholder="Link to Your Videos" required>
+
+      <textarea 
+        name="message" 
+        placeholder="Why should we feature your content?" 
+        required>
+      </textarea>
+
+      <button type="submit">Submit Proposal</button>
+
+    </form>
+
+  </div>
+
+
+  <!-- =======================================================
+       SCRIPTS
+  ======================================================= -->
+  <script src="app.js" defer></script>
+
+
+</body>
+</html>

@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>TechTube Admin</title>
+
+<link rel="stylesheet" href="admin.css">
+</head>
+<body>
+
+<div class="admin-container">
+
+<h1>🎬 TechTube Admin Dashboard</h1>
+
+<form id="videoForm">
+
+<input
+type="text"
+id="title"
+placeholder="Video Title"
+required>
+
+<input
+type="text"
+id="category"
+placeholder="Category (AI, Programming, Cybersecurity)"
+required>
+
+<input
+type="text"
+id="duration"
+placeholder="Duration (e.g. 10:35)"
+required>
+
+<input
+type="text"
+id="thumbnail"
+placeholder="Thumbnail URL"
+required>
+
+<input
+type="text"
+id="video"
+placeholder="Video URL"
+required>
+
+<label>Or Upload Video File</label>
+<input type="file" id="videoFile" accept="video/*">
+
+<textarea
+id="description"
+placeholder="Video Description"
+required>
+</textarea>
+
+<button type="submit">
+Upload Video
+</button>
+
+</form>
+
+<hr>
+
+<h2>Uploaded Videos</h2>
+
+<div id="videoList"></div>
+
+</div>
+
+<script src="admin.js"></script>
+
+</body>
+</html>

@@ -1,0 +1,710 @@
+/* =========================================================
+   GLOBAL RESET & BASE STYLES
+========================================================= */
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+  font-family: "Segoe UI", system-ui, -apple-system, sans-serif;
+}
+
+body {
+  background: radial-gradient(circle at top left, #111827, #0b0b0b 60%);
+  color: white;
+  min-height: 100vh;
+}
+
+
+/* =========================================================
+   HEADER (TOP NAVBAR)
+========================================================= */
+
+.header {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 15px 25px;
+  background: linear-gradient(to bottom, rgba(0,0,0,0.8), transparent);
+  position: fixed;
+  width: 100%;
+  top: 0;
+  z-index: 1000;
+  height: 70px;
+  overflow: hidden;
+}
+
+.header.scrolled {
+  background: #000;
+}
+
+/* Logo */
+
+.logo {
+  font-size: 22px;
+  font-weight: 700;
+  letter-spacing: 1px;
+}
+
+.logo-tech {
+  color: #00c3ff;
+}
+
+.logo-tube {
+  color: #ffffff;
+}
+
+/* Menu Toggle */
+
+.menu-toggle {
+  font-size: 22px;
+  background: none;
+  border: none;
+  color: white;
+  cursor: pointer;
+  margin-right: 15px;
+}
+
+.menu-toggle:hover {
+  color: #00c3ff;
+}
+
+
+/* ===============================
+   HEADER ACTIONS LAYOUT
+================================= */
+
+.header-actions {
+  display: flex;
+  align-items: center;
+  gap: 15px;
+  position: relative;
+}
+
+
+/* =========================================================
+   SEARCH BAR + SUGGESTIONS
+========================================================= */
+
+.search-wrapper {
+  position: relative;
+  width: 100%;
+  max-width: 450px;
+}
+
+.search-bar input {
+  width: 100%;
+  padding: 10px 15px;
+  border-radius: 30px;
+  border: 1px solid rgba(255,255,255,0.1);
+  background: rgba(255,255,255,0.05);
+  color: white;
+  outline: none;
+  transition: 0.3s;
+}
+
+.search-bar input:focus {
+  border-color: #00c3ff;
+  box-shadow: 0 0 10px rgba(0,195,255,0.3);
+}
+
+.search-bar button {
+  position: absolute;
+  right: 5px;
+  top: 5px;
+  bottom: 5px;
+  border-radius: 25px;
+  border: none;
+  background: #00c3ff;
+  padding: 0 15px;
+  cursor: pointer;
+  font-weight: bold;
+}
+
+/* Search Suggestions Dropdown */
+
+.suggestions-box {
+  position: absolute;
+  top: 45px;
+  left: 0;
+  right: 0;
+  background: rgba(25,25,35,0.95);
+  border-radius: 12px;
+  backdrop-filter: blur(10px);
+  display: none;
+  max-height: 250px;
+  overflow-y: auto;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.5);
+}
+
+.suggestion-item {
+  padding: 12px 15px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.suggestion-item:hover {
+  background: rgba(0,195,255,0.15);
+}
+
+
+/* =========================================================
+   SIDEBAR (SLIDE-IN MENU)
+========================================================= */
+
+.sidebar {
+  position: fixed;
+  top: 70px;
+  left: -220px; /* Hidden by default */
+  width: 220px;
+  height: 100%;
+  background-color: #141414;
+  padding-top: 20px;
+  transition: left 0.3s ease;
+  z-index: 999;
+}
+
+.sidebar.active {
+  left: 0;
+}
+
+.sidebar ul {
+  list-style: none;
+}
+
+.sidebar li {
+  padding: 12px 25px;
+  cursor: pointer;
+  border-radius: 20px;
+  margin: 5px 10px;
+  transition: 0.3s;
+}
+
+.sidebar li:hover,
+.sidebar .active {
+  background: linear-gradient(90deg, #00c3ff, #4facfe);
+  color: black;
+  font-weight: 600;
+}
+
+
+/* =========================================================
+   MAIN CONTENT LAYOUT
+========================================================= */
+
+.main-content {
+  margin-top: 80px;
+  padding: 40px 20px;
+  max-width: 1200px;
+  margin-inline: auto;
+  transition: margin-left 0.3s ease;
+}
+
+.main-content.shift {
+  margin-left: 220px;
+}
+
+
+/* =========================================================
+   HERO SECTION (NETFLIX STYLE SLIDESHOW)
+========================================================= */
+
+.hero {
+  position: relative;
+  height: 85vh;
+  overflow: hidden;
+  color: white;
+}
+
+/* Slide Container */
+
+.hero-slides {
+  position: absolute;
+  inset: 0;
+  z-index: 1;
+}
+
+/* Individual Slide */
+
+.hero-slide {
+  position: absolute;
+  inset: 0;
+  background-size: cover;
+  background-position: center;
+  opacity: 0;
+  transform: scale(1.1);
+  transition: opacity 1.2s ease, transform 6s ease;
+}
+
+.hero-slide.active {
+  opacity: 1;
+  transform: scale(1);
+}
+
+/* Cinematic Overlay */
+
+.hero-overlay {
+  position: absolute;
+  inset: 0;
+  background:
+    linear-gradient(to top, rgba(0,0,0,0.9), rgba(0,0,0,0.3)),
+    linear-gradient(to right, rgba(0,0,0,0.7), transparent);
+  z-index: 2;
+}
+
+/* Hero Content */
+
+.hero-content {
+  position: relative;
+  z-index: 3;
+  max-width: 600px;
+  padding: 80px 60px;
+}
+
+.hero-content h1 {
+  font-size: 48px;
+  margin-bottom: 15px;
+}
+
+.hero-content p {
+  font-size: 18px;
+  margin-bottom: 25px;
+  color: #ddd;
+}
+
+/* Hero Buttons */
+
+.play-btn,
+.info-btn {
+  padding: 12px 22px;
+  border-radius: 6px;
+  border: none;
+  font-size: 16px;
+  cursor: pointer;
+  transition: 0.3s ease;
+}
+
+.play-btn {
+  background: white;
+  color: black;
+  font-weight: 600;
+  margin-right: 10px;
+}
+
+.play-btn:hover {
+  background: #ddd;
+}
+
+.info-btn {
+  background: rgba(109,109,110,0.7);
+  color: white;
+}
+
+.info-btn:hover {
+  background: rgba(109,109,110,0.9);
+}
+
+
+/* =========================================================
+   VIDEO GRID SECTION
+========================================================= */
+
+.video-card {
+  min-width: 280px;
+  height: 160px;
+  border-radius: 12px;
+  overflow: hidden;
+  position: relative;
+  cursor: pointer;
+  transition: transform 0.3s ease;
+}
+
+.video-card img {
+  width: 100%;
+  height: 100%;
+  object-fit: cover;
+}
+
+.video-card:hover {
+  transform: scale(1.08);
+  z-index: 5;
+}
+
+.video-card h3 {
+  font-size: 15px;
+  margin-bottom: 5px;
+}
+
+.video-card p {
+  font-size: 13px;
+  color: #aaa;
+}
+
+
+/* =========================================================
+   PROFILE (AVATAR + DROPDOWN)
+========================================================= */
+.profile {
+  position: relative;
+  width: 42px;
+  height: 42px;
+  border-radius: 50%;
+  overflow: visible;
+  border: 2px solid #00c3ff;
+  transition: 0.3s ease;
+}
+
+
+.profile:hover {
+  transform: scale(1.08);
+}
+
+/* ===============================
+   PROFILE IMAGE STYLE
+================================= */
+
+.profile img {
+  width: 100%;
+  height: 100%;
+  border-radius: 50%;
+  object-fit: cover;
+  cursor: pointer;
+  transition: transform 0.3s ease, box-shadow 0.3s ease;
+  position: relative;
+  z-index: 2;
+  display: block;
+}
+
+.profile img:hover {
+  transform: scale(1.1);
+  box-shadow: 0 0 15px rgba(0, 245, 255, 0.7);
+}
+
+/* Ripple Ring */
+.profile::before {
+  content: "";
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  width: 38px;
+  height: 38px;
+  border-radius: 50%;
+  transform: translate(-50%, -50%);
+  background: rgba(0, 245, 255, 0.4);
+  z-index: 1;
+  animation: ripplePulse 2s infinite ease-out;
+}
+
+/* Expanding Ripple Animation */
+@keyframes ripplePulse {
+  0% {
+    width: 38px;
+    height: 38px;
+    opacity: 0.6;
+  }
+  70% {
+    width: 70px;
+    height: 70px;
+    opacity: 0;
+  }
+  100% {
+    opacity: 0;
+  }
+}
+
+/* Dropdown Menu */
+
+.profile-dropdown {
+  position: absolute;
+  right: 0;
+  top: 45px;
+  background: #1f1f1f;
+  border-radius: 8px;
+  width: 220px;
+  display: none;
+  box-shadow: 0 10px 25px rgba(0,0,0,0.4);
+  overflow: hidden;
+}
+
+.profile-dropdown.active {
+  display: block;
+}
+
+.dropdown-item {
+  padding: 12px 15px;
+  font-size: 14px;
+  cursor: pointer;
+  transition: 0.2s;
+}
+
+.dropdown-item:hover {
+  background: #2a2a2a;
+  color: #00c3ff;
+}
+
+
+/* =========================================================
+   PROFILE SLIDE PANEL (NETFLIX STYLE)
+========================================================= */
+
+.profile-panel {
+  position: fixed;
+  top: 0;
+  right: -400px;
+  width: 350px;
+  height: 100vh;
+  background: #141414;
+  padding: 40px 25px;
+  z-index: 3000;
+  transition: right 0.4s ease;
+  box-shadow: -10px 0 40px rgba(0,0,0,0.6);
+  overflow-y: auto;
+  animation: panelFade 0.3s ease;
+}
+
+.profile-panel.active {
+  right: 0;
+}
+
+@keyframes panelFade {
+  from {
+    opacity: 0;
+    transform: translateX(20px);
+  }
+  to {
+    opacity: 1;
+    transform: translateX(0);
+  }
+}
+
+/* Overlay Behind Panel */
+
+.profile-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0,0,0,0.6);
+  backdrop-filter: blur(3px);
+  opacity: 0;
+  pointer-events: none;
+  transition: opacity 0.3s ease;
+  z-index: 2500;
+}
+
+.profile-overlay.active {
+  opacity: 1;
+  pointer-events: auto;
+}
+
+
+/* =========================================================
+   PROFILE PANEL CONTENT
+========================================================= */
+
+.profile-panel h3 {
+  margin-bottom: 10px;
+}
+
+.profile-panel p {
+  font-size: 14px;
+  margin-bottom: 15px;
+  color: #ccc;
+}
+
+.upload-steps ol {
+  padding-left: 18px;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.proposal-form input,
+.proposal-form textarea {
+  width: 100%;
+  padding: 8px;
+  margin-bottom: 10px;
+  border-radius: 6px;
+  border: none;
+}
+
+.proposal-form button {
+  width: 100%;
+  padding: 10px;
+  background: #ff0000;
+  color: white;
+  border: none;
+  border-radius: 6px;
+  cursor: pointer;
+}
+
+
+
+/* ===============================
+   PARTNER WITH US - GLOW BUTTON
+================================= */
+
+/* ===============================
+   PARTNER BUTTON + ARROW
+================================= */
+.brand-btn {
+  position: relative;
+  padding: 8px 16px;
+  border-radius: 25px;
+  border: none;
+  cursor: pointer;
+  font-weight: 600;
+  font-size: 14px;
+  background: linear-gradient(45deg, #00f5ff, #8a2be2);
+  color: white;
+  animation: glowPulse 2.5s ease-in-out infinite;
+  overflow: hidden;
+}
+
+/* Arrow element */
+.brand-btn::after {
+  content: "➜";
+  position: absolute;
+  right: -22px; /* pushes arrow toward profile */
+  top: 50%;
+  transform: translateY(-50%);
+  font-size: 18px;
+  color: #00f5ff;
+
+  animation: arrowBounce 1.2s ease-in-out infinite;
+}
+
+/* Arrow bounce animation */
+@keyframes arrowBounce {
+  0% { transform: translateY(-50%) translateX(0); }
+  50% { transform: translateY(-50%) translateX(6px); }
+  100% { transform: translateY(-50%) translateX(0); }
+}
+
+
+
+/* Hover Effect */
+.brand-btn:hover {
+  transform: scale(1.08);
+  box-shadow: 
+    0 0 25px rgba(0, 245, 255, 0.9),
+    0 0 45px rgba(138, 43, 226, 0.7);
+}
+
+/* Gradient Animation */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
+}
+
+/* Pulse Glow Animation */
+@keyframes glowPulse {
+  0% {
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+  }
+  50% {
+    box-shadow:
+      0 0 25px rgba(0, 245, 255, 0.9),
+      0 0 40px rgba(138, 43, 226, 0.8);
+  }
+  100% {
+    box-shadow: 0 0 10px rgba(0, 245, 255, 0.5);
+  }
+}
+
+
+.brand-btn::before {
+  content: "";
+  position: absolute;
+  top: 0;
+  left: -75%;
+  width: 50%;
+  height: 100%;
+  background: linear-gradient(
+    120deg,
+    rgba(255,255,255,0.2),
+    rgba(255,255,255,0.6),
+    rgba(255,255,255,0.2)
+  );
+  transform: skewX(-20deg);
+  animation: shimmer 3s infinite;
+}
+
+@keyframes shimmer {
+  0% { left: -75%; }
+  100% { left: 130%; }
+}
+
+
+/* =========================================================
+   HORIZONTAL CONTENT ROWS
+========================================================= */
+
+.content-row {
+  padding: 40px 60px;
+}
+
+.content-row h2 {
+  margin-bottom: 20px;
+  font-size: 22px;
+}
+
+.row-scroll {
+  display: flex;
+  gap: 20px;
+  overflow-x: auto;
+  scroll-behavior: smooth;
+}
+
+.row-scroll::-webkit-scrollbar {
+  display: none;
+}
+
+/* ===============================
+VERTICAL VIDEO GRID
+================================ */
+
+.all-videos-section {
+  padding: 40px 5%;
+}
+
+.all-videos-section h2 {
+  font-size: 22px;
+  margin-bottom: 20px;
+}
+
+/* Grid Layout */
+.video-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+  gap: 20px;
+}
+
+.trending-card{
+  min-width:260px;
+  margin-right:15px;
+  cursor:pointer;
+  transition:transform .25s;
+}
+
+.trending-card:hover{
+  transform:scale(1.08);
+}
+
+.trending-card img{
+  width:100%;
+  border-radius:10px;
+}
+
+/* Video duration */
+.duration-badge{
+  position:absolute;
+  bottom:6px;
+  right:6px;
+  background:rgba(0,0,0,0.85);
+  color:#fff;
+  font-size:11px;
+  padding:3px 7px;
+  border-radius:4px;
+  font-weight:500;
+  backdrop-filter: blur(4px);
+}
+
