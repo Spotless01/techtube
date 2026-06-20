@@ -105,3 +105,45 @@ hr {
   background: #e50914;
   padding: 8px 12px;
 }
+
+.login-screen {
+  position: fixed;
+  inset: 0;
+  background: #0f0f0f;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  z-index: 9999;
+}
+
+.login-box {
+  width: 350px;
+  background: #181818;
+  padding: 30px;
+  border-radius: 16px;
+  text-align: center;
+}
+
+.login-box h2 {
+  margin-bottom: 20px;
+  color: #00c3ff;
+}
+
+.login-box input {
+  margin-bottom: 12px;
+}
+
+#loginError {
+  color: #ff4d4d;
+  margin-top: 10px;
+  font-size: 14px;
+}
+
+#adminDashboard {
+  display: none;
+}
+
+.edit-btn {
+  background: #00c3ff;
+  padding: 8px 12px;
+}

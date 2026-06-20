@@ -9,9 +9,20 @@
 <link rel="stylesheet" href="admin.css">
 </head>
 <body>
+  <div class="login-screen" id="loginScreen">
+  <div class="login-box">
+    <h2>TechTube Admin Login</h2>
 
-<div class="admin-container">
+    <input type="text" id="adminUsername" placeholder="Username">
+    <input type="password" id="adminPassword" placeholder="Password">
 
+    <button id="loginBtn">Login</button>
+    <p id="loginError"></p>
+  </div>
+</div>
+
+<div class="admin-container" id="adminDashboard">
+<button id="logoutBtn">Logout</button>
 <h1>🎬 TechTube Admin Dashboard</h1>
 
 <form id="videoForm">
@@ -55,8 +66,12 @@ placeholder="Video Description"
 required>
 </textarea>
 
-<button type="submit">
-Upload Video
+<button type="submit" id="submitBtn">
+  Upload Video
+</button>
+
+<button type="button" id="cancelEditBtn" style="display:none;">
+  Cancel Edit
 </button>
 
 </form>

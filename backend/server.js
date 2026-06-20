@@ -87,6 +87,35 @@ app.delete("/videos/:id", (req, res) => {
   res.json({ message: "Video deleted successfully" });
 });
 
+// ✅ UPDATE VIDEO
+app.put("/videos/:id", (req, res) => {
+  const videos = readVideos();
+
+  const videoIndex = videos.findIndex(video => video.id === req.params.id);
+
+  if (videoIndex === -1) {
+    return res.status(404).json({ message: "Video not found" });
+  }
+
+  videos[videoIndex] = {
+    ...videos[videoIndex],
+    title: req.body.title,
+    category: req.body.category,
+    thumbnail: req.body.thumbnail,
+    video: req.body.video,
+    duration: req.body.duration,
+    description: req.body.description
+  };
+
+  saveVideos(videos);
+
+  res.json({
+    message: "Video updated successfully",
+    video: videos[videoIndex]
+  });
+});
+
+
 app.listen(PORT, () => {
   console.log(`TechTube backend running on http://localhost:${PORT}`);
 });
