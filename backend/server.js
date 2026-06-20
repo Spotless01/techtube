@@ -13,6 +13,16 @@ app.use("/uploads", express.static(path.join(__dirname, "uploads")));
 
 const DB_FILE = path.join(__dirname, "db.json");
 
+const UPLOADS_DIR = path.join(__dirname, "uploads");
+
+if (!fs.existsSync(DB_FILE)) {
+  fs.writeFileSync(DB_FILE, "[]");
+}
+
+if (!fs.existsSync(UPLOADS_DIR)) {
+  fs.mkdirSync(UPLOADS_DIR);
+}
+
 function readVideos() {
   const data = fs.readFileSync(DB_FILE, "utf8");
   return JSON.parse(data);
@@ -24,7 +34,7 @@ function saveVideos(videos) {
 
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
-    cb(null, "uploads/");
+    cb(null, UPLOADS_DIR);
   },
   filename: (req, file, cb) => {
     const uniqueName = Date.now() + "-" + file.originalname;
