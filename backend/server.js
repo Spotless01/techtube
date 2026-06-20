@@ -1,37 +1,48 @@
+require("dotenv").config();
+
 const express = require("express");
 const cors = require("cors");
 const multer = require("multer");
-const fs = require("fs");
 const path = require("path");
+const { MongoClient, ObjectId } = require("mongodb");
 
 const app = express();
 const PORT = process.env.PORT || 5000;
 
+const MONGODB_URI = process.env.MONGODB_URI;
+const DB_NAME = "techtube";
+const COLLECTION_NAME = "videos";
+
+let videosCollection;
+
 app.use(cors());
 app.use(express.json());
-app.use("/uploads", express.static(path.join(__dirname, "uploads")));
-
-const DB_FILE = path.join(__dirname, "db.json");
 
 const UPLOADS_DIR = path.join(__dirname, "uploads");
+app.use("/uploads", express.static(UPLOADS_DIR));
 
-if (!fs.existsSync(DB_FILE)) {
-  fs.writeFileSync(DB_FILE, "[]");
+// =============================
+// CONNECT TO MONGODB
+// =============================
+async function connectDB() {
+  try {
+    const client = new MongoClient(MONGODB_URI);
+    await client.connect();
+
+    const db = client.db(DB_NAME);
+    videosCollection = db.collection(COLLECTION_NAME);
+
+    console.log("Connected to MongoDB Atlas");
+  } catch (error) {
+    console.error("MongoDB connection error:", error);
+  }
 }
 
-if (!fs.existsSync(UPLOADS_DIR)) {
-  fs.mkdirSync(UPLOADS_DIR);
-}
+connectDB();
 
-function readVideos() {
-  const data = fs.readFileSync(DB_FILE, "utf8");
-  return JSON.parse(data);
-}
-
-function saveVideos(videos) {
-  fs.writeFileSync(DB_FILE, JSON.stringify(videos, null, 2));
-}
-
+// =============================
+// FILE UPLOAD SETUP
+// =============================
 const storage = multer.diskStorage({
   destination: (req, file, cb) => {
     cb(null, UPLOADS_DIR);
@@ -44,78 +55,132 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
-app.get("/videos", (req, res) => {
-  const videos = readVideos();
-  res.json(videos);
+// =============================
+// GET ALL VIDEOS
+// =============================
+app.get("/videos", async (req, res) => {
+  try {
+    const videos = await videosCollection
+      .find()
+      .sort({ createdAt: -1 })
+      .toArray();
+
+    const formattedVideos = videos.map(video => ({
+      id: video._id.toString(),
+      title: video.title,
+      category: video.category,
+      thumbnail: video.thumbnail,
+      video: video.video,
+      duration: video.duration,
+      description: video.description,
+      date: video.date
+    }));
+
+    res.json(formattedVideos);
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch videos" });
+  }
 });
 
-app.post("/videos", (req, res) => {
-  const videos = readVideos();
+// =============================
+// ADD VIDEO
+// =============================
+app.post("/videos", async (req, res) => {
+  try {
+    const newVideo = {
+      title: req.body.title,
+      category: req.body.category,
+      thumbnail: req.body.thumbnail,
+      video: req.body.video,
+      duration: req.body.duration,
+      description: req.body.description,
+      date: new Date().toLocaleDateString(),
+      createdAt: new Date()
+    };
 
-  const newVideo = {
-    id: Date.now().toString(),
-    title: req.body.title,
-    category: req.body.category,
-    thumbnail: req.body.thumbnail,
-    video: req.body.video,
-    duration: req.body.duration,
-    description: req.body.description,
-    date: new Date().toLocaleDateString()
-  };
+    const result = await videosCollection.insertOne(newVideo);
 
-  videos.push(newVideo);
-  saveVideos(videos);
-
-  res.json(newVideo);
+    res.json({
+      id: result.insertedId.toString(),
+      ...newVideo
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add video" });
+  }
 });
 
+// =============================
+// UPLOAD VIDEO FILE
+// =============================
 app.post("/upload-video", upload.single("videoFile"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No video file uploaded" });
   }
 
-  const videoUrl = `http://localhost:${PORT}/uploads/${req.file.filename}`;
+  const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+  const videoUrl = `${baseUrl}/uploads/${req.file.filename}`;
+
   res.json({ videoUrl });
 });
 
-app.delete("/videos/:id", (req, res) => {
-  const videos = readVideos();
-  const filteredVideos = videos.filter(video => video.id !== req.params.id);
+// =============================
+// DELETE VIDEO
+// =============================
+app.delete("/videos/:id", async (req, res) => {
+  try {
+    await videosCollection.deleteOne({
+      _id: new ObjectId(req.params.id)
+    });
 
-  saveVideos(filteredVideos);
-
-  res.json({ message: "Video deleted successfully" });
-});
-
-// ✅ UPDATE VIDEO
-app.put("/videos/:id", (req, res) => {
-  const videos = readVideos();
-
-  const videoIndex = videos.findIndex(video => video.id === req.params.id);
-
-  if (videoIndex === -1) {
-    return res.status(404).json({ message: "Video not found" });
+    res.json({ message: "Video deleted successfully" });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to delete video" });
   }
-
-  videos[videoIndex] = {
-    ...videos[videoIndex],
-    title: req.body.title,
-    category: req.body.category,
-    thumbnail: req.body.thumbnail,
-    video: req.body.video,
-    duration: req.body.duration,
-    description: req.body.description
-  };
-
-  saveVideos(videos);
-
-  res.json({
-    message: "Video updated successfully",
-    video: videos[videoIndex]
-  });
 });
 
+// =============================
+// UPDATE VIDEO
+// =============================
+app.put("/videos/:id", async (req, res) => {
+  try {
+    const updatedVideo = {
+      title: req.body.title,
+      category: req.body.category,
+      thumbnail: req.body.thumbnail,
+      video: req.body.video,
+      duration: req.body.duration,
+      description: req.body.description,
+      updatedAt: new Date()
+    };
+
+    const result = await videosCollection.findOneAndUpdate(
+      { _id: new ObjectId(req.params.id) },
+      { $set: updatedVideo },
+      { returnDocument: "after" }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    res.json({
+      message: "Video updated successfully",
+      video: {
+        id: result._id.toString(),
+        title: result.title,
+        category: result.category,
+        thumbnail: result.thumbnail,
+        video: result.video,
+        duration: result.duration,
+        description: result.description,
+        date: result.date
+      }
+    });
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update video" });
+  }
+});
 
 app.listen(PORT, () => {
-  console.log(`TechTube backend running on http://localhost:${PORT}`);
+  console.log(`TechTube backend running on port ${PORT}`);
 });
