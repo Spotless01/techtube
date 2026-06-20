@@ -357,7 +357,7 @@ if (videoDescription) {
 
 async function loadVideosFromBackend() {
   try {
-    const response = await fetch("http://localhost:5000/videos");
+    const response = await fetch("https://techtube-backend.onrender.com/videos");
     videos = await response.json();
 
     initWatchPage();

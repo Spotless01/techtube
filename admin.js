@@ -1,4 +1,4 @@
-const API_URL = "http://localhost:5000";
+const API_URL = "https://techtube-backend.onrender.com";
 
 const form = document.getElementById("videoForm");
 const videoList = document.getElementById("videoList");
