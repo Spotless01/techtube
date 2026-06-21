@@ -200,11 +200,31 @@ form.addEventListener("submit", async (e) => {
     videoUrl = uploadData.videoUrl;
   }
 
+
+  let thumbnailUrl = document.getElementById("thumbnail").value;
+const thumbnailFile = document.getElementById("thumbnailFile")?.files[0];
+
+if (thumbnailFile) {
+  const thumbnailFormData = new FormData();
+  thumbnailFormData.append("thumbnailFile", thumbnailFile);
+
+  const thumbnailResponse = await fetch(`${API_URL}/upload-thumbnail`, {
+    method: "POST",
+    headers: {
+      "Authorization": `Bearer ${getToken()}`
+    },
+    body: thumbnailFormData
+  });
+
+  const thumbnailData = await thumbnailResponse.json();
+  thumbnailUrl = thumbnailData.thumbnailUrl;
+}
+
   const videoData = {
     title: document.getElementById("title").value,
     category: document.getElementById("category").value,
     duration: document.getElementById("duration").value,
-    thumbnail: document.getElementById("thumbnail").value,
+    thumbnail: thumbnailUrl,
     video: videoUrl,
     description: document.getElementById("description").value
   };

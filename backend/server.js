@@ -255,6 +255,20 @@ app.patch("/videos/:id/view", async (req, res) => {
   }
 });
 
+// =============================
+// UPLOAD THUMBNAIL IMAGE
+// =============================
+app.post("/upload-thumbnail", verifyAdmin, upload.single("thumbnailFile"), (req, res) => {
+  if (!req.file) {
+    return res.status(400).json({ message: "No thumbnail uploaded" });
+  }
+
+  const baseUrl = process.env.BASE_URL || `http://localhost:${PORT}`;
+  const thumbnailUrl = `${baseUrl}/uploads/${req.file.filename}`;
+
+  res.json({ thumbnailUrl });
+});
+
 app.listen(PORT, () => {
   console.log(`TechTube backend running on port ${PORT}`);
 });
