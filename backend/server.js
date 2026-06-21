@@ -122,6 +122,7 @@ app.get("/videos", async (req, res) => {
       description: video.description,
       featured: video.featured || false,
       views: video.views || 0,
+      likes: video.likes || 0,
       date: video.date
     }));
 
@@ -145,6 +146,7 @@ app.post("/videos", verifyAdmin, async (req, res) => {
       description: req.body.description,
       featured: req.body.featured || false,
       views: 0,
+      likes: 0,
       date: new Date().toLocaleDateString(),
       createdAt: new Date()
     };
@@ -201,7 +203,7 @@ app.put("/videos/:id", verifyAdmin, async (req, res) => {
       video: req.body.video,
       duration: req.body.duration,
       description: req.body.description,
-      featured: video.featured || false,
+      featured: req.body.featured || false,
       updatedAt: new Date()
     };
 
@@ -344,6 +346,31 @@ app.get("/videos/:id/comments", async (req, res) => {
 
   } catch (error) {
     res.status(500).json({ message: "Failed to fetch comments" });
+  }
+});
+
+// =============================
+// LIKE VIDEO
+// =============================
+app.patch("/videos/:id/like", async (req, res) => {
+  try {
+    const result = await videosCollection.findOneAndUpdate(
+      { _id: new ObjectId(req.params.id) },
+      { $inc: { likes: 1 } },
+      { returnDocument: "after" }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    res.json({
+      id: result._id.toString(),
+      likes: result.likes || 0
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to like video" });
   }
 });
 
