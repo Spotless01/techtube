@@ -121,7 +121,7 @@ if (emptyState) emptyState.style.display = "none";
 
   filteredVideos.forEach(video => {
 
-    const views = parseInt(localStorage.getItem("views_" + video.id)) || 0;
+    const views = video.views || 0;
 
     const videoCard = document.createElement("div");
     videoCard.classList.add("video-card");
@@ -161,9 +161,15 @@ function renderTrending() {
     card.classList.add("trending-card");
 
   card.innerHTML = `
-    <img src="${video.thumbnail}" class="thumbnail">
+  <img src="${video.thumbnail}" class="thumbnail">
+
+  <div class="trending-info">
     <div class="trending-title">${video.title}</div>
-  `;
+    <div class="trending-views">
+      ${formatViews(video.views || 0)} views
+    </div>
+  </div>
+`;
 
     card.addEventListener("click", () => {
       window.location.href = `watch.html?id=${video.id}`;

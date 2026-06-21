@@ -708,3 +708,17 @@ VERTICAL VIDEO GRID
   backdrop-filter: blur(4px);
 }
 
+
+.trending-info{
+  padding:10px;
+}
+
+.trending-title{
+  font-weight:600;
+  margin-bottom:4px;
+}
+
+.trending-views{
+  color:#aaa;
+  font-size:12px;
+}
