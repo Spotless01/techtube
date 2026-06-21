@@ -153,7 +153,11 @@ function renderTrending() {
   trendingRow.innerHTML = "";
 
   // Show first 8 videos as trending
-  const trendingVideos = videos.slice(0, 8);
+  let trendingVideos = videos.filter(video => video.featured).slice(0, 8);
+
+if (trendingVideos.length === 0) {
+  trendingVideos = videos.slice(0, 8);
+}
 
   trendingVideos.forEach(video => {
 
@@ -424,7 +428,11 @@ async function loadVideosFromBackend() {
     const response = await fetch("https://techtube-backend.onrender.com/videos");
     videos = await response.json();
 
-    heroVideos = videos.slice(0, 5);
+    heroVideos = videos.filter(video => video.featured).slice(0, 5);
+
+if (heroVideos.length === 0) {
+  heroVideos = videos.slice(0, 5);
+}
 
     renderVideos();
     renderTrending();
