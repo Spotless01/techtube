@@ -183,3 +183,15 @@ hr {
 .checkbox-row input {
   width: auto;
 }
+
+input,
+textarea,
+select {
+  width: 100%;
+  padding: 12px;
+  border: none;
+  border-radius: 8px;
+  background: #252525;
+  color: white;
+  outline: none;
+}
