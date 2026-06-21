@@ -14,6 +14,10 @@ const videoStats = document.getElementById("videoStats");
 const videoDescription = document.getElementById("videoDescription");
 const recommendedSection = document.getElementById("recommendedSection");
 const nextThumbnail = document.getElementById("nextThumbnail");
+const commentName = document.getElementById("commentName");
+const commentText = document.getElementById("commentText");
+const commentBtn = document.getElementById("commentBtn");
+const commentsList = document.getElementById("commentsList");
 
 /* =====================================================
    🔍 GLOBAL SEARCH (WORKS ON ALL PAGES)
@@ -84,6 +88,38 @@ async function increaseViewOnce() {
   }
 }
 
+
+async function loadComments() {
+  if (!commentsList || !videoId) return;
+
+  try {
+    const response = await fetch(
+      `${API_URL}/videos/${videoId}/comments`
+    );
+
+    const comments = await response.json();
+
+    commentsList.innerHTML = "";
+
+    comments.reverse().forEach(comment => {
+
+      const item = document.createElement("div");
+      item.className = "comment-item";
+
+      item.innerHTML = `
+        <h4>${comment.name}</h4>
+        <p>${comment.text}</p>
+        <span class="comment-date">${comment.date}</span>
+      `;
+
+      commentsList.appendChild(item);
+    });
+
+  } catch (error) {
+    console.error("Failed to load comments:", error);
+  }
+}
+
 /* =====================================================
    3️⃣ LOAD SELECTED VIDEO
 ===================================================== */
@@ -134,7 +170,8 @@ videoPlayer.addEventListener("play", increaseViewOnce);
 
       // Initialize features
       loadRecommendedVideos(videoId);
-      setupAutoPlay(selectedVideo);
+loadComments();
+setupAutoPlay(selectedVideo);
     }
   }
 }
@@ -386,6 +423,46 @@ async function loadVideosFromBackend() {
   } catch (error) {
     console.error("Failed to load videos:", error);
   }
+}
+
+if (commentBtn) {
+
+  commentBtn.addEventListener("click", async () => {
+
+    const name = commentName.value.trim() || "Anonymous";
+    const text = commentText.value.trim();
+
+    if (!text) {
+      alert("Please enter a comment.");
+      return;
+    }
+
+    try {
+
+      await fetch(
+        `${API_URL}/videos/${videoId}/comments`,
+        {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+          },
+          body: JSON.stringify({
+            name,
+            text
+          })
+        }
+      );
+
+      commentText.value = "";
+
+      loadComments();
+
+    } catch (error) {
+      console.error("Failed to post comment:", error);
+    }
+
+  });
+
 }
 
 loadVideosFromBackend();

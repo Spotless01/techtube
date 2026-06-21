@@ -272,6 +272,81 @@ app.post("/upload-thumbnail", verifyAdmin, upload.single("thumbnailFile"), (req,
   res.json({ thumbnailUrl });
 });
 
+app.get("/search", async (req, res) => {
+  try {
+    const query = req.query.q || "";
+
+    const videos = await videosCollection
+      .find({
+        title: {
+          $regex: query,
+          $options: "i"
+        }
+      })
+      .toArray();
+
+    res.json(videos);
+
+  } catch (error) {
+    res.status(500).json({
+      message: "Search failed"
+    });
+  }
+});
+
+// =============================
+// ADD COMMENT TO VIDEO
+// =============================
+app.post("/videos/:id/comments", async (req, res) => {
+  try {
+    const newComment = {
+      name: req.body.name || "Anonymous",
+      text: req.body.text,
+      date: new Date().toLocaleDateString(),
+      createdAt: new Date()
+    };
+
+    const result = await videosCollection.findOneAndUpdate(
+      { _id: new ObjectId(req.params.id) },
+      { $push: { comments: newComment } },
+      { returnDocument: "after" }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    res.json({
+      message: "Comment added successfully",
+      comments: result.comments || []
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to add comment" });
+  }
+});
+
+
+// =============================
+// GET VIDEO COMMENTS
+// =============================
+app.get("/videos/:id/comments", async (req, res) => {
+  try {
+    const video = await videosCollection.findOne({
+      _id: new ObjectId(req.params.id)
+    });
+
+    if (!video) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    res.json(video.comments || []);
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to fetch comments" });
+  }
+});
+
 app.listen(PORT, () => {
   console.log(`TechTube backend running on port ${PORT}`);
 });

@@ -201,12 +201,30 @@ if (searchInput && searchBtn) {
 });
 
   // Button search
-  searchBtn.addEventListener("click", () => {
-    const query = searchInput.value.trim();
-    if (!query) return;
+  searchBtn.addEventListener("click", async () => {
 
-    window.location.href = `index.html?search=${encodeURIComponent(query)}`;
-  });
+  const query = searchInput.value.trim();
+
+  if (!query) {
+    renderVideos();
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      `${API_URL}/search?q=${encodeURIComponent(query)}`
+    );
+
+    videos = await response.json();
+
+    renderVideos();
+
+  } catch (error) {
+    console.error(error);
+  }
+
+});
 
   // Enter key search
   searchInput.addEventListener("keypress", (e) => {
