@@ -85,6 +85,22 @@ if (logoutBtn) {
   });
 }
 
+function updateStats(videos) {
+  const totalVideos = videos.length;
+  const totalViews = videos.reduce((sum, video) => sum + (video.views || 0), 0);
+
+  const mostViewed = videos.length
+    ? videos.reduce((top, video) => (video.views || 0) > (top.views || 0) ? video : top)
+    : null;
+
+  const latestVideo = videos[0];
+
+  document.getElementById("totalVideos").textContent = totalVideos;
+  document.getElementById("totalViews").textContent = totalViews;
+  document.getElementById("topVideo").textContent = mostViewed ? mostViewed.title : "None";
+  document.getElementById("latestUpload").textContent = latestVideo ? latestVideo.title : "None";
+}
+
 // ==========================
 // LOAD ALL VIDEOS
 // ==========================
@@ -92,6 +108,8 @@ async function loadVideos() {
   try {
     const response = await fetch(`${API_URL}/videos`);
     const videos = await response.json();
+
+    updateStats(videos);
 
     videoList.innerHTML = "";
 
@@ -237,6 +255,7 @@ async function deleteVideo(id) {
     console.error(error);
   }
 }
+
 
 // ==========================
 // CANCEL EDIT

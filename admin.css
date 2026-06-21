@@ -147,3 +147,28 @@ hr {
   background: #00c3ff;
   padding: 8px 12px;
 }
+
+.stats-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+  gap: 15px;
+  margin-bottom: 25px;
+}
+
+.stat-card {
+  background: #222;
+  padding: 18px;
+  border-radius: 14px;
+  text-align: center;
+}
+
+.stat-card h3 {
+  color: #00c3ff;
+  margin-bottom: 6px;
+  font-size: 24px;
+}
+
+.stat-card p {
+  color: #aaa;
+  font-size: 13px;
+}
