@@ -165,7 +165,7 @@ async function editVideo(id) {
   document.getElementById("thumbnail").value = video.thumbnail;
   document.getElementById("video").value = video.video;
   document.getElementById("description").value = video.description;
-
+  document.getElementById("featured").checked = video.featured || false;
   submitBtn.textContent = "Update Video";
   cancelEditBtn.style.display = "block";
 
@@ -226,7 +226,8 @@ if (thumbnailFile) {
     duration: document.getElementById("duration").value,
     thumbnail: thumbnailUrl,
     video: videoUrl,
-    description: document.getElementById("description").value
+    description: document.getElementById("description").value,
+    featured: document.getElementById("featured").checked
   };
 
   if (editingVideoId) {

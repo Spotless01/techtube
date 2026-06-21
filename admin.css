@@ -172,3 +172,14 @@ hr {
   color: #aaa;
   font-size: 13px;
 }
+
+.checkbox-row {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  color: #ddd;
+}
+
+.checkbox-row input {
+  width: auto;
+}

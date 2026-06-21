@@ -120,6 +120,7 @@ app.get("/videos", async (req, res) => {
       video: video.video,
       duration: video.duration,
       description: video.description,
+      featured: video.featured || false,
       views: video.views || 0,
       date: video.date
     }));
@@ -142,6 +143,7 @@ app.post("/videos", verifyAdmin, async (req, res) => {
       video: req.body.video,
       duration: req.body.duration,
       description: req.body.description,
+      featured: req.body.featured || false,
       views: 0,
       date: new Date().toLocaleDateString(),
       createdAt: new Date()
@@ -199,6 +201,7 @@ app.put("/videos/:id", verifyAdmin, async (req, res) => {
       video: req.body.video,
       duration: req.body.duration,
       description: req.body.description,
+      featured: video.featured || false,
       updatedAt: new Date()
     };
 
