@@ -14,6 +14,8 @@ const videoStats = document.getElementById("videoStats");
 const videoDescription = document.getElementById("videoDescription");
 const recommendedSection = document.getElementById("recommendedSection");
 const nextThumbnail = document.getElementById("nextThumbnail");
+const likeBtn = document.getElementById("likeBtn");
+const likeCount = document.getElementById("likeCount");
 const commentName = document.getElementById("commentName");
 const commentText = document.getElementById("commentText");
 const commentBtn = document.getElementById("commentBtn");
@@ -88,6 +90,39 @@ async function increaseViewOnce() {
   }
 }
 
+async function likeVideo() {
+
+  if (!likeBtn || !likeCount) return;
+
+  if (sessionStorage.getItem(`liked_${videoId}`)) {
+    return;
+  }
+
+  try {
+
+    const response = await fetch(
+      `${API_URL}/videos/${videoId}/like`,
+      {
+        method: "PATCH"
+      }
+    );
+
+    const data = await response.json();
+
+    likeCount.textContent = data.likes;
+
+    likeBtn.classList.add("liked");
+
+    sessionStorage.setItem(
+      `liked_${videoId}`,
+      "true"
+    );
+
+  } catch (error) {
+    console.error("Failed to like video:", error);
+  }
+}
+
 
 async function loadComments() {
   if (!commentsList || !videoId) return;
@@ -158,6 +193,9 @@ if (selectedVideo.video.includes("youtube.com") || selectedVideo.video.includes(
       // Set title + description
       videoTitle.textContent = selectedVideo.title;
       videoDescription.textContent = selectedVideo.description;
+      if (likeCount) {
+  likeCount.textContent = selectedVideo.likes || 0;
+}
 
       // Load and display MongoDB views
 let currentViews = selectedVideo.views || 0;
@@ -171,10 +209,20 @@ videoPlayer.addEventListener("play", increaseViewOnce);
       // Initialize features
       loadRecommendedVideos(videoId);
 loadComments();
+if (likeBtn) {
+
+  if (sessionStorage.getItem(`liked_${videoId}`)) {
+    likeBtn.classList.add("liked");
+  }
+
+  likeBtn.onclick = likeVideo;
+}
 setupAutoPlay(selectedVideo);
     }
   }
 }
+
+
 
 /* =====================================================
    4️⃣ NETFLIX STYLE "UP NEXT" AUTOPLAY

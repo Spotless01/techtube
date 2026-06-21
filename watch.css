@@ -468,3 +468,32 @@ body {
   color: #888;
   font-size: 12px;
 }
+
+/* ================================
+   WATCH ACTIONS
+================================ */
+
+.watch-actions {
+  margin: 15px 0 20px;
+}
+
+.watch-actions button {
+  padding: 10px 16px;
+  border: none;
+  border-radius: 25px;
+  background: #252525;
+  color: white;
+  cursor: pointer;
+  font-weight: 600;
+  transition: 0.3s ease;
+}
+
+.watch-actions button:hover {
+  background: #00c3ff;
+  color: #000;
+}
+
+.watch-actions button.liked {
+  background: #00c3ff;
+  color: #000;
+}
