@@ -69,7 +69,7 @@ app.post("/videos", (req, res) => {
   res.json(newVideo);
 });
 
-app.post("/upload-video", upload.single("videoFile"), (req, res) => {
+app.post("/upload-video", verifyAdmin, upload.single("videoFile"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No video file uploaded" });
   }

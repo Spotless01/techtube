@@ -1,3 +1,6 @@
+const jwt = require("jsonwebtoken");
+const bcrypt = require("bcryptjs");
+
 require("dotenv").config();
 
 const express = require("express");
@@ -55,6 +58,50 @@ const storage = multer.diskStorage({
 
 const upload = multer({ storage });
 
+
+// =============================
+// ADMIN LOGIN
+// =============================
+app.post("/admin/login", async (req, res) => {
+  const { username, password } = req.body;
+
+  const adminUsername = process.env.ADMIN_USERNAME;
+  const adminPassword = process.env.ADMIN_PASSWORD;
+
+  if (username !== adminUsername || password !== adminPassword) {
+    return res.status(401).json({ message: "Invalid login details" });
+  }
+
+  const token = jwt.sign(
+    { username },
+    process.env.JWT_SECRET,
+    { expiresIn: "1d" }
+  );
+
+  res.json({ token });
+});
+
+
+// =============================
+// VERIFY ADMIN TOKEN
+// =============================
+function verifyAdmin(req, res, next) {
+  const authHeader = req.headers.authorization;
+
+  if (!authHeader) {
+    return res.status(401).json({ message: "No token provided" });
+  }
+
+  const token = authHeader.split(" ")[1];
+
+  try {
+    jwt.verify(token, process.env.JWT_SECRET);
+    next();
+  } catch (error) {
+    res.status(403).json({ message: "Invalid or expired token" });
+  }
+}
+
 // =============================
 // GET ALL VIDEOS
 // =============================
@@ -85,7 +132,7 @@ app.get("/videos", async (req, res) => {
 // =============================
 // ADD VIDEO
 // =============================
-app.post("/videos", async (req, res) => {
+app.post("/videos", verifyAdmin, async (req, res) => {
   try {
     const newVideo = {
       title: req.body.title,
@@ -112,7 +159,7 @@ app.post("/videos", async (req, res) => {
 // =============================
 // UPLOAD VIDEO FILE
 // =============================
-app.post("/upload-video", upload.single("videoFile"), (req, res) => {
+app.post("/upload-video", verifyAdmin, upload.single("videoFile"), (req, res) => {
   if (!req.file) {
     return res.status(400).json({ message: "No video file uploaded" });
   }
@@ -126,7 +173,7 @@ app.post("/upload-video", upload.single("videoFile"), (req, res) => {
 // =============================
 // DELETE VIDEO
 // =============================
-app.delete("/videos/:id", async (req, res) => {
+app.delete("/videos/:id", verifyAdmin, async (req, res) => {
   try {
     await videosCollection.deleteOne({
       _id: new ObjectId(req.params.id)
@@ -141,7 +188,7 @@ app.delete("/videos/:id", async (req, res) => {
 // =============================
 // UPDATE VIDEO
 // =============================
-app.put("/videos/:id", async (req, res) => {
+app.put("/videos/:id", verifyAdmin, async (req, res) => {
   try {
     const updatedVideo = {
       title: req.body.title,

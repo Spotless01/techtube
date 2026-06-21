@@ -1,38 +1,89 @@
+const API_URL = "https://techtube-backend.onrender.com";
+
+// ==========================
+// ELEMENTS
+// ==========================
 const loginScreen = document.getElementById("loginScreen");
 const adminDashboard = document.getElementById("adminDashboard");
 const loginBtn = document.getElementById("loginBtn");
 const loginError = document.getElementById("loginError");
+const logoutBtn = document.getElementById("logoutBtn");
 
+const form = document.getElementById("videoForm");
+const videoList = document.getElementById("videoList");
 const submitBtn = document.getElementById("submitBtn");
 const cancelEditBtn = document.getElementById("cancelEditBtn");
 
 let editingVideoId = null;
 
-const ADMIN_USERNAME = "admin";
-const ADMIN_PASSWORD = "techtube123";
+// ==========================
+// AUTH HELPERS
+// ==========================
+function getToken() {
+  return localStorage.getItem("techtubeAdminToken");
+}
 
-if (localStorage.getItem("techtubeAdminLoggedIn") === "true") {
+function getAuthHeaders() {
+  return {
+    "Content-Type": "application/json",
+    "Authorization": `Bearer ${getToken()}`
+  };
+}
+
+// ==========================
+// LOGIN CHECK
+// ==========================
+if (getToken()) {
   loginScreen.style.display = "none";
   adminDashboard.style.display = "block";
 }
 
-loginBtn.addEventListener("click", () => {
-  const username = document.getElementById("adminUsername").value;
-  const password = document.getElementById("adminPassword").value;
+// ==========================
+// LOGIN
+// ==========================
+if (loginBtn) {
+  loginBtn.addEventListener("click", async () => {
+    const username = document.getElementById("adminUsername").value;
+    const password = document.getElementById("adminPassword").value;
 
-  if (username === ADMIN_USERNAME && password === ADMIN_PASSWORD) {
-    localStorage.setItem("techtubeAdminLoggedIn", "true");
-    loginScreen.style.display = "none";
-    adminDashboard.style.display = "block";
-  } else {
-    loginError.textContent = "Invalid username or password";
-  }
-});
+    try {
+      const response = await fetch(`${API_URL}/admin/login`, {
+        method: "POST",
+        headers: {
+          "Content-Type": "application/json"
+        },
+        body: JSON.stringify({ username, password })
+      });
 
-const API_URL = "https://techtube-backend.onrender.com";
+      const data = await response.json();
 
-const form = document.getElementById("videoForm");
-const videoList = document.getElementById("videoList");
+      if (!response.ok) {
+        loginError.textContent = data.message || "Invalid username or password";
+        return;
+      }
+
+      localStorage.setItem("techtubeAdminToken", data.token);
+
+      loginScreen.style.display = "none";
+      adminDashboard.style.display = "block";
+
+      loadVideos();
+
+    } catch (error) {
+      loginError.textContent = "Could not connect to server";
+    }
+  });
+}
+
+// ==========================
+// LOGOUT
+// ==========================
+if (logoutBtn) {
+  logoutBtn.addEventListener("click", () => {
+    localStorage.removeItem("techtubeAdminToken");
+    location.reload();
+  });
+}
 
 // ==========================
 // LOAD ALL VIDEOS
@@ -57,15 +108,11 @@ async function loadVideos() {
           <p>${video.duration}</p>
         </div>
 
-        <button
-  class="edit-btn"
-  onclick="editVideo('${video.id}')">
-  Edit
-</button>
+        <button class="edit-btn" onclick="editVideo('${video.id}')">
+          Edit
+        </button>
 
-        <button
-          class="delete-btn"
-          onclick="deleteVideo('${video.id}')">
+        <button class="delete-btn" onclick="deleteVideo('${video.id}')">
           Delete
         </button>
       `;
@@ -78,7 +125,9 @@ async function loadVideos() {
   }
 }
 
-
+// ==========================
+// EDIT VIDEO
+// ==========================
 async function editVideo(id) {
   const response = await fetch(`${API_URL}/videos`);
   const videos = await response.json();
@@ -109,7 +158,7 @@ async function editVideo(id) {
 }
 
 // ==========================
-// ADD VIDEO
+// ADD / UPDATE VIDEO
 // ==========================
 form.addEventListener("submit", async (e) => {
   e.preventDefault();
@@ -123,6 +172,9 @@ form.addEventListener("submit", async (e) => {
 
     const uploadResponse = await fetch(`${API_URL}/upload-video`, {
       method: "POST",
+      headers: {
+        "Authorization": `Bearer ${getToken()}`
+      },
       body: formData
     });
 
@@ -142,9 +194,7 @@ form.addEventListener("submit", async (e) => {
   if (editingVideoId) {
     await fetch(`${API_URL}/videos/${editingVideoId}`, {
       method: "PUT",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(videoData)
     });
 
@@ -152,9 +202,7 @@ form.addEventListener("submit", async (e) => {
   } else {
     await fetch(`${API_URL}/videos`, {
       method: "POST",
-      headers: {
-        "Content-Type": "application/json"
-      },
+      headers: getAuthHeaders(),
       body: JSON.stringify(videoData)
     });
 
@@ -173,12 +221,14 @@ form.addEventListener("submit", async (e) => {
 // DELETE VIDEO
 // ==========================
 async function deleteVideo(id) {
-
   if (!confirm("Delete this video?")) return;
 
   try {
     await fetch(`${API_URL}/videos/${id}`, {
-      method: "DELETE"
+      method: "DELETE",
+      headers: {
+        "Authorization": `Bearer ${getToken()}`
+      }
     });
 
     loadVideos();
@@ -188,6 +238,9 @@ async function deleteVideo(id) {
   }
 }
 
+// ==========================
+// CANCEL EDIT
+// ==========================
 if (cancelEditBtn) {
   cancelEditBtn.addEventListener("click", () => {
     editingVideoId = null;
@@ -197,16 +250,9 @@ if (cancelEditBtn) {
   });
 }
 
-const logoutBtn = document.getElementById("logoutBtn");
-
-if (logoutBtn) {
-  logoutBtn.addEventListener("click", () => {
-    localStorage.removeItem("techtubeAdminLoggedIn");
-    location.reload();
-  });
-}
-
 // ==========================
 // INITIAL LOAD
 // ==========================
-loadVideos();
+if (getToken()) {
+  loadVideos();
+}
