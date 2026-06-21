@@ -1,4 +1,5 @@
 let videos = [];
+const API_URL = "https://techtube-backend.onrender.com";
 
 /* =====================================================
    1️⃣ URL PARAMS & GLOBAL ELEMENTS
@@ -54,14 +55,6 @@ function formatViews(num) {
   return num;
 }
 
-function getStoredViews(id) {
-  return parseInt(localStorage.getItem("views_" + id)) || 0;
-}
-
-function saveViews(id, views) {
-  localStorage.setItem("views_" + id, views);
-}
-
 function hasViewedThisSession(id) {
   return sessionStorage.getItem("viewed_" + id);
 }
@@ -70,6 +63,26 @@ function markAsViewed(id) {
   sessionStorage.setItem("viewed_" + id, "true");
 }
 
+
+async function increaseViewOnce() {
+  if (hasViewedThisSession(videoId)) return;
+
+  try {
+    const response = await fetch(`${API_URL}/videos/${videoId}/view`, {
+      method: "PATCH"
+    });
+
+    const data = await response.json();
+
+    markAsViewed(videoId);
+
+    videoStats.textContent =
+      `${formatViews(data.views)} views • ${videos.find(v => v.id === videoId)?.date || ""}`;
+
+  } catch (error) {
+    console.error("Failed to update views:", error);
+  }
+}
 
 /* =====================================================
    3️⃣ LOAD SELECTED VIDEO
@@ -89,6 +102,8 @@ function initWatchPage() {
       // Load video source
       const youtubePlayer = document.getElementById("youtubePlayer");
 
+      if (!youtubePlayer) return;
+
 if (selectedVideo.video.includes("youtube.com") || selectedVideo.video.includes("youtu.be")) {
   const videoUrl = new URL(selectedVideo.video);
   const youtubeId = videoUrl.searchParams.get("v");
@@ -96,6 +111,7 @@ if (selectedVideo.video.includes("youtube.com") || selectedVideo.video.includes(
   videoPlayer.style.display = "none";
   youtubePlayer.style.display = "block";
   youtubePlayer.src = `https://www.youtube.com/embed/${youtubeId}`;
+  increaseViewOnce();
 } else {
   youtubePlayer.style.display = "none";
   videoPlayer.style.display = "block";
@@ -107,23 +123,14 @@ if (selectedVideo.video.includes("youtube.com") || selectedVideo.video.includes(
       videoTitle.textContent = selectedVideo.title;
       videoDescription.textContent = selectedVideo.description;
 
-      // Load and display views
-      let currentViews = getStoredViews(videoId);
+      // Load and display MongoDB views
+let currentViews = selectedVideo.views || 0;
 
-      videoStats.textContent =
-        `${formatViews(currentViews)} views • ${selectedVideo.date}`;
+videoStats.textContent =
+  `${formatViews(currentViews)} views • ${selectedVideo.date}`;
 
-      // Increase views once per session
-      videoPlayer.addEventListener("play", () => {
-        if (!hasViewedThisSession(videoId)) {
-          currentViews++;
-          saveViews(videoId, currentViews);
-          markAsViewed(videoId);
-
-          videoStats.textContent =
-            `${formatViews(currentViews)} views • ${selectedVideo.date}`;
-        }
-      });
+// Increase views once per browser session
+videoPlayer.addEventListener("play", increaseViewOnce);
 
       // Initialize features
       loadRecommendedVideos(videoId);
@@ -202,7 +209,7 @@ function loadRecommendedVideos(currentId) {
     .filter(video => video.id !== currentId)
     .forEach(video => {
 
-      const views = getStoredViews(video.id);
+      const views = video.views || 0;
 
       const card = document.createElement("div");
       card.classList.add("recommended-card");
@@ -371,7 +378,7 @@ if (videoDescription) {
 
 async function loadVideosFromBackend() {
   try {
-    const response = await fetch("https://techtube-backend.onrender.com/videos");
+    const response = await fetch(`${API_URL}/videos`);
     videos = await response.json();
 
     initWatchPage();

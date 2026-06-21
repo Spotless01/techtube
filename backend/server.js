@@ -120,6 +120,7 @@ app.get("/videos", async (req, res) => {
       video: video.video,
       duration: video.duration,
       description: video.description,
+      views: video.views || 0,
       date: video.date
     }));
 
@@ -141,6 +142,7 @@ app.post("/videos", verifyAdmin, async (req, res) => {
       video: req.body.video,
       duration: req.body.duration,
       description: req.body.description,
+      views: 0,
       date: new Date().toLocaleDateString(),
       createdAt: new Date()
     };
@@ -225,6 +227,31 @@ app.put("/videos/:id", verifyAdmin, async (req, res) => {
     });
   } catch (error) {
     res.status(500).json({ message: "Failed to update video" });
+  }
+});
+
+// =============================
+// INCREASE VIDEO VIEW COUNT
+// =============================
+app.patch("/videos/:id/view", async (req, res) => {
+  try {
+    const result = await videosCollection.findOneAndUpdate(
+      { _id: new ObjectId(req.params.id) },
+      { $inc: { views: 1 } },
+      { returnDocument: "after" }
+    );
+
+    if (!result) {
+      return res.status(404).json({ message: "Video not found" });
+    }
+
+    res.json({
+      id: result._id.toString(),
+      views: result.views || 0
+    });
+
+  } catch (error) {
+    res.status(500).json({ message: "Failed to update views" });
   }
 });
 
